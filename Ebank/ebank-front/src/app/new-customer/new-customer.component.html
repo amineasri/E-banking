@@ -1,0 +1,20 @@
+<div>
+  <h1>Create New Customer</h1>
+  <form [formGroup]="newCustomerFormGroup" (ngSubmit)="handleSaveCustomer()">
+    <div>
+      <label for="name">Name:</label>
+      <input id="name" type="text" formControlName="name">
+      <div *ngIf="newCustomerFormGroup.get('name')?.invalid && newCustomerFormGroup.get('name')?.touched">
+        Name is required.
+      </div>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input id="email" type="email" formControlName="email">
+      <div *ngIf="newCustomerFormGroup.get('email')?.invalid && newCustomerFormGroup.get('email')?.touched">
+        Enter a valid email.
+      </div>
+    </div>
+    <button type="submit" [disabled]="newCustomerFormGroup.invalid">Save</button>
+  </form>
+</div>

@@ -1,0 +1,83 @@
+<div class="container mt-2">
+  <div class="row">
+    <div class="col col-md-6">
+      <div class="card">
+        <div class="card-header">Accounts</div>
+        <div class="card-body">
+          <form [formGroup]="accountFormGroup" (ngSubmit)="handleSearchAccount()">
+            <div class="input-group">
+              <label class="input-group-text">Account Id :</label>
+              <input type="text" formControlName="accountId" class="form-control">
+              <button type="submit" class="btn btn-success"><i class="bi-search"></i></button>
+            </div>
+          </form>
+          <div class="mb-3">
+            <ng-container *ngIf="accountObservable | async as accountDetails">
+              <div>
+                <label>Account Id:</label>
+                <label>{{accountDetails.accountId}}</label>
+              </div>
+              <div>
+                <label>Balance:</label>
+                <label>{{accountDetails.balance | number:'1.2-2'}}</label>
+              </div>
+              <table class="table">
+                <thead>
+                <th>ID</th><th>DATE</th><th>TYPE</th><th>AMOUNT</th><th>Desc</th>
+                </thead>
+                <tbody>
+                <tr *ngFor="let op of accountDetails.operationDTOS">
+                  <td>{{op.id}}</td>
+                  <td>{{op.amount}}</td>
+                  <td>{{op.description}}</td>
+                  <td>{{op.operationDate}}</td>
+                  <td>{{op.type}}</td>
+                </tr>
+                </tbody>
+              </table>
+              <ul class="nav-pills">
+                <li *ngFor="let item of [].constructor(accountDetails.totalPages); let p=index">
+                  <a [ngClass]="p==currentPage ? 'btn-outline' : 'btn-danger'" (click)="gotoPage(p)" class="btn mt-2">{{ p + 1 }}</a>
+                </li>
+              </ul>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col col-md-6">
+      <div class="card" *ngIf="accountObservable">
+        <div class="card-header">Operations</div>
+        <div class="card-body">
+          <form [formGroup]="operationFormGroup" (ngSubmit)="handleAccountOperation()" method="post">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" value="DEBIT" type="radio" formControlName="operationType">
+              <label class="form-check-label">DEBIT:</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input type="radio" class="form-check-input" value="CREDIT" formControlName="operationType">
+              <label class="form-check-label">CREDIT:</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input type="radio" class="form-check-input" value="TRANSFER" formControlName="operationType">
+              <label class="form-check-label">TRANSFER:</label>
+            </div>
+            <div class="mb-3" *ngIf="operationFormGroup.value.operationType === 'TRANSFER'">
+              <label class="form-label">Account Destination:</label>
+              <input type="text" formControlName="accountDestination" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Amount:</label>
+              <input type="text" formControlName="amount" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description:</label>
+              <input type="text" formControlName="description" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success"><i class="bi-save"></i> Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
